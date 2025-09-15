@@ -1,0 +1,56 @@
+{
+  "ornamental-gardens": {
+    "index": 3,
+    "name": "Ornamental Gardens",
+    "color": {
+      "red": 0.38,
+      "green": 0.47099999999999997,
+      "blue": 0.17299999999999999
+    }
+  },
+  "gardens-of-the-west": {
+    "index": 1,
+    "name": "Gardens of the West",
+    "color": {
+      "red": 0.56100000000000005,
+      "green": 0.51000000000000001,
+      "blue": 0.41999999999999998
+    }
+  },
+  "water-gardens": {
+    "index": 5,
+    "name": "Water Gardens",
+    "color": {
+      "red": 0.32900000000000001,
+      "green": 0.47499999999999998,
+      "blue": 0.72599999999999998
+    }
+  },
+  "internationally-inspired-gardens": {
+    "index": 2,
+    "name": "Internationally Inspired Gardens",
+    "color": {
+      "red": 0.65900000000000003,
+      "green": 0.20000000000000001,
+      "blue": 0.30199999999999999
+    }
+  },
+  "facilities": {
+    "index": 0,
+    "name": "Facilities",
+    "color": {
+      "red": 0.875,
+      "green": 0.58399999999999996,
+      "blue": 0.24299999999999999
+    }
+  },
+  "shady-gardens": {
+    "index": 4,
+    "name": "Shady Gardens",
+    "color": {
+      "red": 0.42399999999999999,
+      "green": 0.184,
+      "blue": 0.502
+    }
+  }
+}

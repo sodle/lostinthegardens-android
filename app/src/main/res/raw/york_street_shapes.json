@@ -1,0 +1,818 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "York Street",
+        "category": "park-geometry"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [-104.96413897499555, 39.73285603018718],
+            [-104.96410496390875, 39.73103253654082],
+            [-104.96078019335204, 39.73104090567776],
+            [-104.96077757714613, 39.73060461115725],
+            [-104.96031190231545, 39.73060461115725],
+            [-104.96028835695881, 39.73073740120137],
+            [-104.95996657041857, 39.73101907620446],
+            [-104.95992209585599, 39.73104724364171],
+            [-104.95931968791837, 39.73104322030693],
+            [-104.95931707176769, 39.73164881745461],
+            [-104.95927782950702, 39.73185403521538],
+            [-104.95915225427127, 39.732077359730596],
+            [-104.95903723981468, 39.732264177440584],
+            [-104.95876450596603, 39.73260656328833],
+            [-104.95865724378612, 39.732898290181765],
+            [-104.95863893073086, 39.733445526266166],
+            [-104.9596880071754, 39.73344753815502],
+            [-104.96103794178013, 39.7334535713679],
+            [-104.96105102253351, 39.732888228199755],
+            [-104.96413897499555, 39.73285603018718]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "York Street",
+        "category": "park-geometry"
+      },
+      "geometry": {
+        "coordinates": [-104.96129012675392, 39.732100552323345],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Boettcher Memorial Center",
+        "monogram": "A",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96051003177496, 39.732610401688675],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bonfils-Stanton Visitor Center & Gift Shop",
+        "monogram": "B",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96011974958039, 39.732056031493045],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cheesman Gate",
+        "monogram": "C",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96409760936473, 39.73220261389281],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Freyer-Newman Center",
+        "monogram": "D",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96043117796152, 39.73310785424158],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Greenhouse Complex",
+        "monogram": "E",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96193663017456, 39.73253218827645],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hive Garden Bistro",
+        "monogram": "F",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96287319593944, 39.73187872549758],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Morrison Discovery Center",
+        "monogram": "G",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.9594306542265, 39.73322676509383],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Offshoots Café",
+        "monogram": "H",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96056291185111, 39.73238187867571],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Science Pyramid",
+        "monogram": "I",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96133054307116, 39.73151399160193],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UMB Bank Amphitheater",
+        "monogram": "J",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96087213611017, 39.731921017493306],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Waring House",
+        "monogram": "K",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96044536237089, 39.73088115531303],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Terrace",
+        "monogram": "L",
+        "category": "facilities"
+      },
+      "geometry": {
+        "coordinates": [-104.96227715624138, 39.732482486663315],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bristlecone Border",
+        "monogram": "01",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96100893068039, 39.73160086749536],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cactus and Succulent House",
+        "monogram": "02",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96390748690008, 39.731385929020234],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colorado Garden Show Promenade Garden",
+        "monogram": "03",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.95971733376638, 39.73255089745024],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Conservation Garden",
+        "monogram": "04",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96306055102916, 39.73152028629494],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Crossroads Garden",
+        "monogram": "05",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96042878107315, 39.73224566770304],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Darlene Radichel Plant Select® Garden",
+        "monogram": "06",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96270776567277, 39.73223722922003],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dryland Mesa",
+        "monogram": "07",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96326468017676, 39.73181937580233],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dwarf Conifer Collection",
+        "monogram": "08",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96296651907345, 39.73125308602329],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gates Montane Garden",
+        "monogram": "09",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96392576209466, 39.731892212711244],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grant Family Cottonwood Border",
+        "monogram": "10",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96145638267768, 39.73205906026462],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Green Roof",
+        "monogram": "11",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96058740600309, 39.73236658524911],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Laura Smith Porter Plains Garden",
+        "monogram": "12",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96370262484714, 39.732002019715054],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mordecai Children's Garden",
+        "monogram": "13",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.95919294885559, 39.73270902377189],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nexus Garden",
+        "monogram": "14",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96245742431172, 39.73249066154514],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ornamental Grasses Garden",
+        "monogram": "15",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96178740461521, 39.73156866599544],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ponderosa Border",
+        "monogram": "16",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.9606058912884, 39.73193097161064],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Roads Water-Smart Garden",
+        "monogram": "17",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96097900809764, 39.732293300614316],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sacred Earth",
+        "monogram": "18",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96280801952662, 39.73165013010788],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Welcome Garden",
+        "monogram": "19",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96006906223141, 39.731749871296415],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Willow Glade in Celebration of Brandon Mandelbaum",
+        "monogram": "20",
+        "category": "gardens-of-the-west"
+      },
+      "geometry": {
+        "coordinates": [-104.96317415231763, 39.731370096134185],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bill Hosokawa Bonsai Pavilion and Tea Garden",
+        "category": "internationally-inspired-gardens",
+        "monogram": "21"
+      },
+      "geometry": {
+        "coordinates": [-104.96295587858128, 39.732769891803116],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Boettcher Memorial Tropical Conservatory",
+        "category": "internationally-inspired-gardens",
+        "monogram": "22"
+      },
+      "geometry": {
+        "coordinates": [-104.96094926734531, 39.73246344078234],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ella Mullen Weckbaugh Tea House",
+        "category": "internationally-inspired-gardens",
+        "monogram": "23"
+      },
+      "geometry": {
+        "coordinates": [-104.96328218194317, 39.732786078371305],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "June's PlantAsia",
+        "category": "internationally-inspired-gardens",
+        "monogram": "24"
+      },
+      "geometry": {
+        "coordinates": [-104.96223728248765, 39.731290520131125],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marnie's Pavilion",
+        "category": "internationally-inspired-gardens",
+        "monogram": "25"
+      },
+      "geometry": {
+        "coordinates": [-104.96138593876833, 39.73259256435793],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rock Alpine Garden",
+        "category": "internationally-inspired-gardens",
+        "monogram": "26"
+      },
+      "geometry": {
+        "coordinates": [-104.9636457679051, 39.73122097174323],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shofu-En Japanese Garden",
+        "category": "internationally-inspired-gardens",
+        "monogram": "27"
+      },
+      "geometry": {
+        "coordinates": [-104.96365272231367, 39.732416356635184],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Steppe Garden",
+        "category": "internationally-inspired-gardens",
+        "monogram": "28"
+      },
+      "geometry": {
+        "coordinates": [-104.96176023627245, 39.731949810525435],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ann Montague Iris and Daylily Garden",
+        "category": "ornamental-gardens",
+        "monogram": "29"
+      },
+      "geometry": {
+        "coordinates": [-104.96261079730101, 39.731383721497565],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Annuals Garden and Pavilion",
+        "category": "ornamental-gardens",
+        "monogram": "30"
+      },
+      "geometry": {
+        "coordinates": [-104.96230336111002, 39.73163457139398],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Ellipse in honor of Nancy Schotters",
+        "category": "ornamental-gardens",
+        "monogram": "31"
+      },
+      "geometry": {
+        "coordinates": [-104.9604538534773, 39.73103585801948],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "El Pomar Waterway",
+        "category": "ornamental-gardens",
+        "monogram": "32"
+      },
+      "geometry": {
+        "coordinates": [-104.96076631453941, 39.731558245720834],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fountain Beds",
+        "category": "ornamental-gardens",
+        "monogram": "33"
+      },
+      "geometry": {
+        "coordinates": [-104.96133689560948, 39.73129879365658],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fragrance Garden",
+        "category": "ornamental-gardens",
+        "monogram": "34"
+      },
+      "geometry": {
+        "coordinates": [-104.96049868938675, 39.7314137363104],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gloria Falkenberg Herb Garden",
+        "category": "ornamental-gardens",
+        "monogram": "35"
+      },
+      "geometry": {
+        "coordinates": [-104.96096829072579, 39.73112073272125],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lainie's Cutting Garden",
+        "category": "ornamental-gardens",
+        "monogram": "36"
+      },
+      "geometry": {
+        "coordinates": [-104.96252522332367, 39.731934599124344],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Le Potager: A gift from the Ladd Family",
+        "category": "ornamental-gardens",
+        "monogram": "37"
+      },
+      "geometry": {
+        "coordinates": [-104.9632032110522, 39.73211863040831],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lilac Garden",
+        "category": "ornamental-gardens",
+        "monogram": "38"
+      },
+      "geometry": {
+        "coordinates": [-104.96241111518513, 39.7313962977598],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "O'Fallon Perennial Walk",
+        "category": "ornamental-gardens",
+        "monogram": "39"
+      },
+      "geometry": {
+        "coordinates": [-104.96042040916721, 39.7318542640686],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orangery",
+        "category": "ornamental-gardens",
+        "monogram": "40"
+      },
+      "geometry": {
+        "coordinates": [-104.96188011181214, 39.73232785997479],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Romantic Gardens",
+        "category": "ornamental-gardens",
+        "monogram": "41"
+      },
+      "geometry": {
+        "coordinates": [-104.960790595623, 39.73136961432985],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Schlessman Plaza",
+        "category": "ornamental-gardens",
+        "monogram": "42"
+      },
+      "geometry": {
+        "coordinates": [-104.96021175941983, 39.73136453715162],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Scripture Garden",
+        "category": "ornamental-gardens",
+        "monogram": "43"
+      },
+      "geometry": {
+        "coordinates": [-104.96127920465393, 39.731136713594],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sensory Garden",
+        "category": "ornamental-gardens",
+        "monogram": "44"
+      },
+      "geometry": {
+        "coordinates": [-104.9601245427814, 39.73231326298526],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Victorian Secret Garden",
+        "category": "ornamental-gardens",
+        "monogram": "45"
+      },
+      "geometry": {
+        "coordinates": [-104.96249115410481, 39.732082522219116],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Birds and Bees Walk",
+        "category": "shady-gardens",
+        "monogram": "46"
+      },
+      "geometry": {
+        "coordinates": [-104.96225294461873, 39.73114662114088],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Oak Grove",
+        "category": "shady-gardens",
+        "monogram": "47"
+      },
+      "geometry": {
+        "coordinates": [-104.96217969918519, 39.73207590870041],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shady Lane",
+        "category": "shady-gardens",
+        "monogram": "48"
+      },
+      "geometry": {
+        "coordinates": [-104.96178966950802, 39.73224884580134],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodland Mosaic",
+        "category": "shady-gardens",
+        "monogram": "49"
+      },
+      "geometry": {
+        "coordinates": [-104.96179810385011, 39.731095990904095],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Four Towers Pool",
+        "category": "water-gardens",
+        "monogram": "50"
+      },
+      "geometry": {
+        "coordinates": [-104.96145834915653, 39.73136302229557],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Monet Pool",
+        "category": "water-gardens",
+        "monogram": "51"
+      },
+      "geometry": {
+        "coordinates": [-104.96296588696822, 39.73242054362527],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Steppe Garden Waterway",
+        "category": "water-gardens",
+        "monogram": "52"
+      },
+      "geometry": {
+        "coordinates": [-104.96164607062781, 39.73181757725547],
+        "type": "Point"
+      }
+    }
+  ]
+}
