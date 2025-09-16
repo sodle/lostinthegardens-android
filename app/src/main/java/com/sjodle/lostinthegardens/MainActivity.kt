@@ -2,20 +2,21 @@ package com.sjodle.lostinthegardens
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -46,108 +46,126 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LostInTheGardensTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainView(Modifier.padding(innerPadding))
-                }
+                MainView()
             }
-        }
-    }
-}
-
-@Composable
-fun MainView(modifier: Modifier = Modifier) {
-    var requestId by remember { mutableStateOf(UUID.randomUUID()) }
-    val parkLoadingState by loadParkData(
-        context = LocalContext.current,
-        parkId = "YorkStreet",
-        shapesFallback = R.raw.york_street_shapes,
-        categoriesFallback = R.raw.york_street_categories,
-        attemptId = requestId
-    )
-    val refresh = { requestId = UUID.randomUUID() }
-    Box(modifier) {
-        when (val state = parkLoadingState) {
-            is ParkLoadingState.Loading -> Text("Loading...")
-            is ParkLoadingState.StaleData -> Map(
-                parkData = state.parkData,
-                isStaleData = true,
-                refresh = refresh,
-            )
-
-            is ParkLoadingState.Success -> Map(
-                parkData = state.parkData,
-                refresh = refresh,
-            )
         }
     }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
+fun MainView() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    var requestId by remember { mutableStateOf(UUID.randomUUID()) }
+    val parkLoadingState by loadParkData(
+        context = LocalContext.current,
+        parkId = "YorkStreet",
+        shapesFallback = R.raw.york_street_shapes,
+        categoriesFallback = R.raw.york_street_categories,
+        attemptId = requestId,
+    )
+
+    val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val isLocationAvailable = locationPermission.status.isGranted
+
+    val isUsingStaleData = parkLoadingState is ParkLoadingState.StaleData
+
+    val parkData = when (val state = parkLoadingState) {
+        is ParkLoadingState.StaleData -> state.parkData
+        is ParkLoadingState.Success -> state.parkData
+        else -> null
+    }
+
+    LaunchedEffect(isLocationAvailable) {
+        if (!isLocationAvailable) {
+            Log.d("LocationNag", "Deploying snackbar")
+            val result = snackbarHostState.showSnackbar(
+                "Lost in the Gardens can help you navigate through the park, if you allow it to access your precise location.",
+                "Allow",
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true,
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    Log.d("LocationNag", "Location nag accepted.")
+                    locationPermission.launchPermissionRequest()
+                }
+
+                SnackbarResult.Dismissed -> {
+                    Log.d("LocationNag", "Location nag dismissed.")
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(requestId, isUsingStaleData) {
+        if (isUsingStaleData) {
+            Log.d("StaleDataNag", "Deploying snackbar")
+            val result = snackbarHostState.showSnackbar(
+                message = "Failed to load data from the server. This information may be out of date.",
+                "Retry",
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true,
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    Log.d("StaleDataNag", "Refresh triggered.")
+                    requestId = UUID.randomUUID()
+                }
+
+                SnackbarResult.Dismissed -> {
+                    Log.d("StaleDataNag", "Stale data nag dismissed.")
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        parkData?.let {
+            Map(
+                modifier = Modifier.padding(paddingValues),
+                parkData = it,
+                locationAvailable = isLocationAvailable,
+            )
+        } ?: Text(
+            "Loading...",
+            modifier = Modifier.padding(paddingValues),
+        )
+    }
+}
+
+@Composable
 fun Map(
+    modifier: Modifier = Modifier,
     parkData: ParkData,
-    isStaleData: Boolean = false,
-    refresh: () -> Unit,
+    locationAvailable: Boolean,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
     }
-    val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    Column(Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.weight(1f),
-            cameraPositionState = cameraPositionState,
-            properties = MapProperties(
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
-                    LocalContext.current,
-                    R.raw.map_style,
-                ),
-                isMyLocationEnabled = locationPermission.status.isGranted,
+    GoogleMap(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(
+            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
+                LocalContext.current,
+                R.raw.map_style,
             ),
-        ) {
-            Polygon(
-                points = parkData.park.bounds,
-                fillColor = Color.Transparent,
-                strokeColor = MaterialTheme.colorScheme.outline,
-            )
-            parkData.park.markers.map {
-                ParkMarker(it, parkData.categories)
-            }
-        }
-        if (isStaleData) {
-            Row(
-                Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    "Couldn't load data from the server. This information may be out of date.",
-                    modifier = Modifier.weight(1f),
-                )
-                Button(
-                    refresh,
-                ) {
-                    Text("Try again")
-                }
-            }
-        }
-        if (!locationPermission.status.isGranted) {
-            Row(
-                Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    "Location permission is needed for us to help you navigate.",
-                    modifier = Modifier.weight(1f),
-                )
-                Button(
-                    { locationPermission.launchPermissionRequest() },
-                ) {
-                    Text("Grant permission")
-                }
-            }
+            isMyLocationEnabled = locationAvailable,
+        ),
+    ) {
+        Polygon(
+            points = parkData.park.bounds,
+            fillColor = Color.Transparent,
+            strokeColor = MaterialTheme.colorScheme.outline,
+        )
+        parkData.park.markers.map {
+            ParkMarker(it, parkData.categories)
         }
     }
 }
