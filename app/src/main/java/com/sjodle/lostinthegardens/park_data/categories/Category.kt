@@ -1,6 +1,6 @@
 package com.sjodle.lostinthegardens.park_data.categories
 
-import android.graphics.Color
+import androidx.compose.ui.graphics.Color
 import org.json.JSONObject
 
 data class CategoryColor(
@@ -18,8 +18,8 @@ data class CategoryColor(
         }
     }
 
-    val hue: Int
-        get() = Color.valueOf(red, green, blue).toArgb()
+    val color: Color
+        get() = Color(red, green, blue)
 }
 
 data class Category(
