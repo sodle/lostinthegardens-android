@@ -6,11 +6,20 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -21,6 +30,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,11 +44,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -48,6 +60,7 @@ import com.sjodle.lostinthegardens.park_data.ParkData
 import com.sjodle.lostinthegardens.park_data.ParkLoadingState
 import com.sjodle.lostinthegardens.park_data.loadParkData
 import com.sjodle.lostinthegardens.ui.composable.ParkMarker
+import com.sjodle.lostinthegardens.ui.composable.circleLayout
 import com.sjodle.lostinthegardens.ui.theme.LostInTheGardensTheme
 import java.util.UUID
 
@@ -100,6 +113,11 @@ fun MainView() {
         BaseLayer("Satellite", painterResource(R.drawable.globe), MapType.SATELLITE),
     )
 
+    val cameraPositionState = rememberCameraPositionState {}
+
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     LaunchedEffect(isLocationAvailable) {
         if (!isLocationAvailable) {
             Log.d("LocationNag", "Deploying snackbar")
@@ -144,6 +162,12 @@ fun MainView() {
         }
     }
 
+    LaunchedEffect(parkData) {
+        parkData?.let {
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -170,32 +194,83 @@ fun MainView() {
                             )
                         }
                     }
+                    IconButton(onClick = { showBottomSheet = true }) {
+                        Icon(painterResource(R.drawable.list), "Locations")
+                    }
                 },
             )
         }
     ) { paddingValues ->
-        parkData?.let {
+        parkData?.let { parkData ->
             Map(
+                cameraPositionState = cameraPositionState,
                 modifier = Modifier.padding(paddingValues),
-                parkData = it,
+                parkData = parkData,
                 locationAvailable = isLocationAvailable,
                 baseLayer = baseLayerOptions[baseLayerIndex],
             )
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = { showBottomSheet = false },
+                    sheetState = sheetState,
+                ) {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+                        LazyColumn(Modifier.padding(paddingValues)) {
+                            parkData.categories.sortedCategories().forEach { (key, category) ->
+                                item {
+                                    Text(
+                                        category.name,
+                                        style = MaterialTheme.typography.headlineMedium,
+                                    )
+                                }
+                                items(parkData.park.markersForCategory(key)) {
+                                    Card(onClick = {
+                                        cameraPositionState.position =
+                                            CameraPosition.fromLatLngZoom(it.position, 20f)
+                                        showBottomSheet = false
+                                    }) {
+                                        Row(modifier = Modifier.padding(8.dp)) {
+                                            it.monogram?.let { modifier ->
+                                                Text(
+                                                    modifier = Modifier
+                                                        .background(
+                                                            category.color.color,
+                                                            CircleShape
+                                                        )
+                                                        .circleLayout()
+                                                        .padding(8.dp),
+                                                    text = modifier,
+                                                )
+                                            }
+                                            Text(
+                                                it.name,
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .padding(8.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                                item {
+                                    HorizontalDivider()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 fun Map(
+    cameraPositionState: CameraPositionState,
     modifier: Modifier = Modifier,
     parkData: ParkData,
     locationAvailable: Boolean,
     baseLayer: BaseLayer,
 ) {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
-    }
-
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,

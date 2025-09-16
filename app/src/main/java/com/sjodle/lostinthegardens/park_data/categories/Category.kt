@@ -59,4 +59,8 @@ data class CategoryFile(
             null
         }
     }
+
+    fun sortedCategories(): List<Pair<String, Category>> {
+        return categories.toList().sortedBy { it.second.index }
+    }
 }

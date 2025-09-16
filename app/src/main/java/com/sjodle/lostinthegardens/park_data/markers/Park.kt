@@ -10,6 +10,10 @@ data class Park(
     val bounds: List<LatLng>,
     val markers: List<Marker>,
 ) {
+    fun markersForCategory(categoryKey: String): List<Marker> {
+        return markers.filter { it.category == categoryKey }.sortedBy { it.monogram }
+    }
+
     companion object {
         fun fromShapefile(geoJson: String): Park {
             val shapefile = JSONObject(geoJson)
