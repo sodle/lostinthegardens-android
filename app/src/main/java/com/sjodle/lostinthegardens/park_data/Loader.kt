@@ -22,6 +22,27 @@ sealed class ParkLoadingState {
     class StaleData(val parkData: ParkData) : ParkLoadingState()
 }
 
+fun loadFallbackData(
+    context: Context,
+    @RawRes shapesFallback: Int,
+    @RawRes categoriesFallback: Int,
+): ParkLoadingState {
+    val shapefile = context.resources.openRawResource(shapesFallback)
+    val shapeJson = String(shapefile.readBytes())
+    shapefile.close()
+
+    val categoryFile = context.resources.openRawResource(categoriesFallback)
+    val categoryJson = String(categoryFile.readBytes())
+    categoryFile.close()
+
+    return ParkLoadingState.StaleData(
+        ParkData(
+            Park.fromShapefile(shapeJson),
+            CategoryFile.fromJson(categoryJson),
+        )
+    )
+}
+
 @Composable
 fun loadParkData(
     context: Context,
@@ -37,19 +58,6 @@ fun loadParkData(
         parkId,
         attemptId
     ) {
-        val shapefile = context.resources.openRawResource(shapesFallback)
-        val shapeJson = String(shapefile.readBytes())
-        shapefile.close()
-
-        val categoryFile = context.resources.openRawResource(categoriesFallback)
-        val categoryJson = String(categoryFile.readBytes())
-        categoryFile.close()
-        
-        value = ParkLoadingState.StaleData(
-            ParkData(
-                Park.fromShapefile(shapeJson),
-                CategoryFile.fromJson(categoryJson),
-            )
-        )
+        value = loadFallbackData(context, shapesFallback, categoriesFallback)
     }
 }
