@@ -5,12 +5,14 @@ import androidx.annotation.RawRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
+import com.sjodle.lostinthegardens.park_data.categories.CategoryFile
 import com.sjodle.lostinthegardens.park_data.markers.Park
 import java.net.URL
 import java.util.UUID
 
 data class ParkData(
     val park: Park,
+    val categories: CategoryFile,
 )
 
 sealed class ParkLoadingState {
@@ -38,6 +40,16 @@ fun loadParkData(
         val shapefile = context.resources.openRawResource(shapesFallback)
         val shapeJson = String(shapefile.readBytes())
         shapefile.close()
-        value = ParkLoadingState.StaleData(ParkData(Park.fromShapefile(shapeJson)))
+
+        val categoryFile = context.resources.openRawResource(categoriesFallback)
+        val categoryJson = String(categoryFile.readBytes())
+        categoryFile.close()
+        
+        value = ParkLoadingState.StaleData(
+            ParkData(
+                Park.fromShapefile(shapeJson),
+                CategoryFile.fromJson(categoryJson),
+            )
+        )
     }
 }

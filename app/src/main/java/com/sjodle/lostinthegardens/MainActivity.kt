@@ -23,12 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.PinConfig
+import com.google.maps.android.compose.AdvancedMarker
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.sjodle.lostinthegardens.park_data.ParkData
 import com.sjodle.lostinthegardens.park_data.ParkLoadingState
 import com.sjodle.lostinthegardens.park_data.loadParkData
@@ -91,6 +92,7 @@ fun Map(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
     }
+
     Column(modifier = modifier) {
         GoogleMap(
             modifier = Modifier.weight(1f),
@@ -107,10 +109,25 @@ fun Map(
                 fillColor = Color.Transparent,
                 strokeColor = MaterialTheme.colorScheme.outline,
             )
-            parkData.park.markers.forEach {
-                Marker(
-                    state = rememberUpdatedMarkerState(position = it.position),
-                    title = it.name,
+            parkData.park.markers.map { marker ->
+                val pinConfig = PinConfig.Builder()
+                marker.monogram?.let {
+                    pinConfig.setGlyph(PinConfig.Glyph(it))
+                }
+                parkData.categories.getCategory(marker.category)?.let {
+                    pinConfig.setBackgroundColor(it.color.hue)
+                    pinConfig.setBorderColor(it.color.hue)
+                }
+
+                val snippet = parkData.categories.getCategory(marker.category)?.let {
+                    "in ${it.name}"
+                }?.ifBlank { "in unknown category" }
+
+                AdvancedMarker(
+                    state = MarkerState(marker.position),
+                    title = marker.name,
+                    pinConfig = pinConfig.build(),
+                    snippet = snippet,
                 )
             }
         }
