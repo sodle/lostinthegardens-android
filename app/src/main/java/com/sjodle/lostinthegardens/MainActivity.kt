@@ -1,9 +1,11 @@
 package com.sjodle.lostinthegardens
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
@@ -65,33 +71,30 @@ fun MainView(modifier: Modifier = Modifier) {
             is ParkLoadingState.StaleData -> Map(
                 parkData = state.parkData,
                 isStaleData = true,
-                modifier = modifier,
                 refresh = refresh,
             )
 
             is ParkLoadingState.Success -> Map(
                 parkData = state.parkData,
-                modifier = modifier,
                 refresh = refresh,
             )
-
-            else -> Text("Error loading park data.")
         }
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Map(
     parkData: ParkData,
-    modifier: Modifier = Modifier,
     isStaleData: Boolean = false,
     refresh: () -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
     }
+    val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    Column(modifier = modifier) {
+    Column(Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.weight(1f),
             cameraPositionState = cameraPositionState,
@@ -99,8 +102,9 @@ fun Map(
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
                     LocalContext.current,
                     R.raw.map_style,
-                )
-            )
+                ),
+                isMyLocationEnabled = locationPermission.status.isGranted,
+            ),
         ) {
             Polygon(
                 points = parkData.park.bounds,
@@ -112,13 +116,36 @@ fun Map(
             }
         }
         if (isStaleData) {
-            Row {
+            Row(
+                Modifier
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .padding(8.dp)
+            ) {
                 Text(
                     "Couldn't load data from the server. This information may be out of date.",
                     modifier = Modifier.weight(1f),
                 )
-                Button(refresh) {
+                Button(
+                    refresh,
+                ) {
                     Text("Try again")
+                }
+            }
+        }
+        if (!locationPermission.status.isGranted) {
+            Row(
+                Modifier
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    "Location permission is needed for us to help you navigate.",
+                    modifier = Modifier.weight(1f),
+                )
+                Button(
+                    { locationPermission.launchPermissionRequest() },
+                ) {
+                    Text("Grant permission")
                 }
             }
         }

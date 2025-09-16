@@ -12,7 +12,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.Url
 import io.ktor.http.path
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -25,7 +24,8 @@ data class ParkData(
 
 sealed class ParkLoadingState {
     object Loading : ParkLoadingState()
-    object Error : ParkLoadingState()
+
+    //    object Error : ParkLoadingState()
     class Success(val parkData: ParkData) : ParkLoadingState()
     class StaleData(val parkData: ParkData) : ParkLoadingState()
 }
@@ -54,7 +54,7 @@ fun loadFallbackData(
 @Composable
 fun loadParkData(
     context: Context,
-    baseUrl: Url = Url("https://lostinthegardens.com"),
+    baseUrl: String = "https://lostinthegardens.com",
     parkId: String,
     @RawRes shapesFallback: Int,
     @RawRes categoriesFallback: Int,
@@ -66,9 +66,10 @@ fun loadParkData(
         parkId,
         attemptId
     ) {
-        val client = HttpClient(CIO)
         launch {
             try {
+                Log.d("loadParkData", "Starting")
+                val client = HttpClient(CIO)
                 val indexResponse = client.get(baseUrl) {
                     url {
                         path("/api")
@@ -99,7 +100,7 @@ fun loadParkData(
                         CategoryFile.fromJson(categoryFileResponse),
                     )
                 )
-            } catch (e: Error) {
+            } catch (e: Exception) {
                 Log.e("loadParkData", "Couldn't load data from network: $e")
                 value = loadFallbackData(context, shapesFallback, categoriesFallback)
             }
