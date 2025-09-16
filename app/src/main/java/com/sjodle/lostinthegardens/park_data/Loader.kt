@@ -1,13 +1,21 @@
 package com.sjodle.lostinthegardens.park_data
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.RawRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
 import com.sjodle.lostinthegardens.park_data.categories.CategoryFile
 import com.sjodle.lostinthegardens.park_data.markers.Park
-import java.net.URL
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.Url
+import io.ktor.http.path
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.UUID
 
 data class ParkData(
@@ -46,7 +54,7 @@ fun loadFallbackData(
 @Composable
 fun loadParkData(
     context: Context,
-    baseUrl: URL = URL("https://lostinthegardens.com"),
+    baseUrl: Url = Url("https://lostinthegardens.com"),
     parkId: String,
     @RawRes shapesFallback: Int,
     @RawRes categoriesFallback: Int,
@@ -58,6 +66,43 @@ fun loadParkData(
         parkId,
         attemptId
     ) {
-        value = loadFallbackData(context, shapesFallback, categoriesFallback)
+        val client = HttpClient(CIO)
+        launch {
+            try {
+                val indexResponse = client.get(baseUrl) {
+                    url {
+                        path("/api")
+                    }
+                }.bodyAsText()
+                val indexJson = JSONObject(indexResponse)
+                    .getJSONObject("Android")
+                    .getJSONObject(parkId)
+                Log.d("loadParkData", "index: $indexJson")
+
+                val shapefileUrl = indexJson.getJSONObject("shapeFile").getString("url")
+                val shapefileResponse = client.get(baseUrl) {
+                    url {
+                        path(shapefileUrl)
+                    }
+                }.bodyAsText()
+
+                val categoryFileUrl = indexJson.getJSONObject("categoryFile").getString("url")
+                val categoryFileResponse = client.get(baseUrl) {
+                    url {
+                        path(categoryFileUrl)
+                    }
+                }.bodyAsText()
+
+                value = ParkLoadingState.Success(
+                    ParkData(
+                        Park.fromShapefile(shapefileResponse),
+                        CategoryFile.fromJson(categoryFileResponse),
+                    )
+                )
+            } catch (e: Error) {
+                Log.e("loadParkData", "Couldn't load data from network: $e")
+                value = loadFallbackData(context, shapesFallback, categoriesFallback)
+            }
+        }
     }
 }

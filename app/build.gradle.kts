@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
