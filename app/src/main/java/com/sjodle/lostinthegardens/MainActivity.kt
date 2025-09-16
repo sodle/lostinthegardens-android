@@ -8,22 +8,32 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -31,6 +41,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.sjodle.lostinthegardens.park_data.ParkData
@@ -52,7 +63,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
+data class BaseLayer(
+    val name: String,
+    val icon: Painter,
+    val layer: MapType,
+)
+
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -76,6 +93,12 @@ fun MainView() {
         is ParkLoadingState.Success -> state.parkData
         else -> null
     }
+
+    var baseLayerIndex by rememberSaveable { mutableIntStateOf(0) }
+    val baseLayerOptions = listOf(
+        BaseLayer("Streets", painterResource(R.drawable.map), MapType.NORMAL),
+        BaseLayer("Satellite", painterResource(R.drawable.globe), MapType.SATELLITE),
+    )
 
     LaunchedEffect(isLocationAvailable) {
         if (!isLocationAvailable) {
@@ -123,18 +146,42 @@ fun MainView() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = {
+                    parkData?.park?.name?.let {
+                        Text(it)
+                    } ?: Text("Loading...")
+                },
+                actions = {
+                    SingleChoiceSegmentedButtonRow {
+                        baseLayerOptions.forEachIndexed { index, layer ->
+                            SegmentedButton(
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = baseLayerOptions.size
+                                ),
+                                selected = index == baseLayerIndex,
+                                onClick = { baseLayerIndex = index },
+                                label = {
+                                    Icon(layer.icon, layer.name)
+                                }
+                            )
+                        }
+                    }
+                },
+            )
+        }
     ) { paddingValues ->
         parkData?.let {
             Map(
                 modifier = Modifier.padding(paddingValues),
                 parkData = it,
                 locationAvailable = isLocationAvailable,
+                baseLayer = baseLayerOptions[baseLayerIndex],
             )
-        } ?: Text(
-            "Loading...",
-            modifier = Modifier.padding(paddingValues),
-        )
+        }
     }
 }
 
@@ -143,6 +190,7 @@ fun Map(
     modifier: Modifier = Modifier,
     parkData: ParkData,
     locationAvailable: Boolean,
+    baseLayer: BaseLayer,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(parkData.park.center, 18f)
@@ -157,6 +205,7 @@ fun Map(
                 R.raw.map_style,
             ),
             isMyLocationEnabled = locationAvailable,
+            mapType = baseLayer.layer,
         ),
     ) {
         Polygon(
