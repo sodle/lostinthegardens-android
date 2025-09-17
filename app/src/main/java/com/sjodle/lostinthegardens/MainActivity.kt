@@ -7,15 +7,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,20 +41,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -62,6 +71,7 @@ import com.sjodle.lostinthegardens.park_data.loadParkData
 import com.sjodle.lostinthegardens.ui.composable.ParkMarker
 import com.sjodle.lostinthegardens.ui.composable.circleLayout
 import com.sjodle.lostinthegardens.ui.theme.LostInTheGardensTheme
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -85,6 +95,7 @@ data class BaseLayer(
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     var requestId by remember { mutableStateOf(UUID.randomUUID()) }
@@ -173,11 +184,7 @@ fun MainView() {
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = {
-                    parkData?.park?.name?.let {
-                        Text(it)
-                    } ?: Text("Loading...")
-                },
+                title = {},
                 actions = {
                     SingleChoiceSegmentedButtonRow {
                         baseLayerOptions.forEachIndexed { index, layer ->
@@ -214,46 +221,57 @@ fun MainView() {
                     onDismissRequest = { showBottomSheet = false },
                     sheetState = sheetState,
                 ) {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
-                        LazyColumn(Modifier.padding(paddingValues)) {
-                            parkData.categories.sortedCategories().forEach { (key, category) ->
-                                item {
-                                    Text(
-                                        category.name,
-                                        style = MaterialTheme.typography.headlineMedium,
-                                    )
-                                }
-                                items(parkData.park.markersForCategory(key)) {
-                                    Card(onClick = {
-                                        cameraPositionState.position =
-                                            CameraPosition.fromLatLngZoom(it.position, 20f)
-                                        showBottomSheet = false
-                                    }) {
-                                        Row(modifier = Modifier.padding(8.dp)) {
-                                            it.monogram?.let { modifier ->
-                                                Text(
-                                                    modifier = Modifier
-                                                        .background(
-                                                            category.color.color,
-                                                            CircleShape
-                                                        )
-                                                        .circleLayout()
-                                                        .padding(8.dp),
-                                                    text = modifier,
-                                                )
-                                            }
+                    LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        parkData.categories.sortedCategories().forEach { (key, category) ->
+                            item {
+                                Text(
+                                    category.name,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                )
+                            }
+                            items(parkData.park.markersForCategory(key)) {
+                                Card(onClick = {
+                                    scope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(it.position, 20f)
+                                        )
+                                    }
+                                    showBottomSheet = false
+                                }) {
+                                    Row(
+                                        modifier = Modifier.padding(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        it.monogram?.let { modifier ->
+                                            Spacer(Modifier.width(8.dp))
                                             Text(
-                                                it.name,
                                                 modifier = Modifier
-                                                    .weight(1f)
-                                                    .padding(8.dp)
+                                                    .background(
+                                                        category.color.color,
+                                                        CircleShape
+                                                    )
+                                                    .circleLayout()
+                                                    .padding(2.dp),
+                                                text = modifier,
+                                                fontSize = 12.sp,
                                             )
+                                            Spacer(Modifier.width(4.dp))
                                         }
+                                        Text(
+                                            it.name,
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(8.dp)
+                                        )
                                     }
                                 }
-                                item {
-                                    HorizontalDivider()
-                                }
+                            }
+
+                            item {
+                                Spacer(Modifier.height(8.dp))
                             }
                         }
                     }
@@ -281,7 +299,9 @@ fun Map(
             ),
             isMyLocationEnabled = locationAvailable,
             mapType = baseLayer.layer,
+            latLngBoundsForCameraTarget = parkData.park.cameraBounds(),
         ),
+        mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM,
     ) {
         Polygon(
             points = parkData.park.bounds,

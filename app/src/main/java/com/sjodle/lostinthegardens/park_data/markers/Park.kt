@@ -2,6 +2,7 @@ package com.sjodle.lostinthegardens.park_data.markers
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import org.json.JSONObject
 
 data class Park(
@@ -12,6 +13,17 @@ data class Park(
 ) {
     fun markersForCategory(categoryKey: String): List<Marker> {
         return markers.filter { it.category == categoryKey }.sortedBy { it.monogram }
+    }
+
+    fun cameraBounds(): LatLngBounds {
+        val north = bounds.maxOf { it.latitude }
+        val south = bounds.minOf { it.latitude }
+        val east = bounds.maxOf { it.longitude }
+        val west = bounds.minOf { it.longitude }
+        return LatLngBounds(
+            LatLng(south, west),
+            LatLng(north, east),
+        )
     }
 
     companion object {
