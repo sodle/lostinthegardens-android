@@ -4,13 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="MainActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-09-17T04:17:52.155354Z">
+        <DropdownSelection timestamp="2026-08-31T18:28:43.798547Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/sodle/.android/avd/Medium_Tablet.avd" />
+              <DeviceId pluginId="Wireless" identifier="serviceName=adb-57241FDCG002W5-NH0cIX" />
             </handle>
           </Target>
         </DropdownSelection>
