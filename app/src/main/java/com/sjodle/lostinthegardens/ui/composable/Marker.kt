@@ -40,13 +40,13 @@ fun ParkMarker(marker: Marker, categoryFile: CategoryFile) {
     val category = categoryFile.getCategory(marker.category)
 
     val backgroundColor =
-        category?.let { it.color.color } ?: MaterialTheme.colorScheme.primaryContainer
+        category?.color?.color ?: MaterialTheme.colorScheme.primaryContainer
     val markerText = marker.monogram ?: ""
 
     MarkerComposable(
         state = position,
         title = marker.name,
-        snippet = category?.name,
+        snippet = category?.name,/**/
     ) {
         Text(
             modifier = Modifier
