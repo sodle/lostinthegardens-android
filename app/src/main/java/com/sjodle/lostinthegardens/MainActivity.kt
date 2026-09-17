@@ -63,6 +63,7 @@ import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.sjodle.lostinthegardens.park_data.ParkData
@@ -128,6 +129,8 @@ fun MainView() {
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+
+    val markerStates = mutableMapOf<String, MarkerState>()
 
     LaunchedEffect(isLocationAvailable) {
         if (!isLocationAvailable) {
@@ -215,6 +218,7 @@ fun MainView() {
                 parkData = parkData,
                 locationAvailable = isLocationAvailable,
                 baseLayer = baseLayerOptions[baseLayerIndex],
+                markerStates
             )
             if (showBottomSheet) {
                 ModalBottomSheet(
@@ -240,6 +244,7 @@ fun MainView() {
                                         )
                                     }
                                     showBottomSheet = false
+                                    markerStates[it.name]?.showInfoWindow()
                                 }) {
                                     Row(
                                         modifier = Modifier.padding(4.dp),
@@ -288,6 +293,7 @@ fun Map(
     parkData: ParkData,
     locationAvailable: Boolean,
     baseLayer: BaseLayer,
+    markerStates: MutableMap<String, MarkerState>
 ) {
     GoogleMap(
         modifier = modifier,
@@ -308,8 +314,8 @@ fun Map(
             fillColor = Color.Transparent,
             strokeColor = MaterialTheme.colorScheme.outline,
         )
-        parkData.park.markers.map {
-            ParkMarker(it, parkData.categories)
+        parkData.park.markers.forEach {
+            ParkMarker(it, parkData.categories, markerStates)
         }
     }
 }

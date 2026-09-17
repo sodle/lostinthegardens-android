@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.sjodle.lostinthegardens.park_data.categories.CategoryFile
 import com.sjodle.lostinthegardens.park_data.markers.Marker
@@ -35,18 +36,20 @@ fun Modifier.circleLayout() =
     }
 
 @Composable
-fun ParkMarker(marker: Marker, categoryFile: CategoryFile) {
-    val position = rememberUpdatedMarkerState(marker.position)
+fun ParkMarker(marker: Marker, categoryFile: CategoryFile, markerMap: MutableMap<String, MarkerState>) {
+    val markerState = rememberUpdatedMarkerState(marker.position)
     val category = categoryFile.getCategory(marker.category)
 
     val backgroundColor =
         category?.color?.color ?: MaterialTheme.colorScheme.primaryContainer
     val markerText = marker.monogram ?: ""
 
+    markerMap[marker.name] = markerState
+
     MarkerComposable(
-        state = position,
+        state = markerState,
         title = marker.name,
-        snippet = category?.name,/**/
+        snippet = category?.name,
     ) {
         Text(
             modifier = Modifier
