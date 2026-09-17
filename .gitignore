@@ -139,3 +139,5 @@ fabric.properties
 .kotlin/
 
 secrets.properties
+
+app/release/
