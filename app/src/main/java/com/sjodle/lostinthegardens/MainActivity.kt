@@ -72,6 +72,7 @@ import com.sjodle.lostinthegardens.park_data.ParkLoadingState
 import com.sjodle.lostinthegardens.park_data.loadParkData
 import com.sjodle.lostinthegardens.ui.composable.ParkMarker
 import com.sjodle.lostinthegardens.ui.composable.circleLayout
+import com.sjodle.lostinthegardens.ui.theme.Green40
 import com.sjodle.lostinthegardens.ui.theme.LostInTheGardensTheme
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -323,7 +324,7 @@ fun Map(
         Polygon(
             points = parkData.park.bounds,
             fillColor = Color.Transparent,
-            strokeColor = MaterialTheme.colorScheme.outline,
+            strokeColor = Green40,
         )
         parkData.park.markers.forEach {
             ParkMarker(it, parkData.categories, markerStates)
