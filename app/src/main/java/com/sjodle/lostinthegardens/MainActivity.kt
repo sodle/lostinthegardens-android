@@ -6,12 +6,15 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -51,6 +54,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -129,10 +138,39 @@ fun MainView() {
 
     val cameraPositionState = rememberCameraPositionState {}
 
-    val sheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    val infoSheetState = rememberModalBottomSheetState()
+    var showInfoSheet by remember { mutableStateOf(false) }
+
     val markerStates = mutableMapOf<String, MarkerState>()
+
+    val bylineText = remember {
+        buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(fontSize = 18.sp)
+            ) {
+                append("Copyright ©️ 2026 by ")
+                withLink(LinkAnnotation.Url(url="https://choiceparalysis.com")) {
+                    append("Choice Paralysis Ltd.")
+                }
+            }
+        }
+    }
+
+    val logoAttributionText = remember {
+        buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(fontSize = 18.sp)
+            ) {
+                append("Logo design by ")
+                withLink(LinkAnnotation.Url(url="https://aeroman.github.io")) {
+                    append("Andrew Roman")
+                }
+            }
+        }
+    }
 
     LaunchedEffect(isLocationAvailable) {
         if (!isLocationAvailable) {
@@ -212,6 +250,9 @@ fun MainView() {
                         }
                     }
                     Spacer(Modifier.width(8.dp))
+                    OutlinedIconButton(onClick = { showInfoSheet = true }) {
+                        Icon(painterResource(R.drawable.info), "App Info")
+                    }
                     OutlinedIconButton(onClick = { showBottomSheet = true }) {
                         Icon(painterResource(R.drawable.list), "Locations")
                     }
@@ -230,10 +271,23 @@ fun MainView() {
                 baseLayer = baseLayerOptions[baseLayerIndex],
                 markerStates = markerStates
             )
+            if (showInfoSheet) {
+               ModalBottomSheet(
+                   onDismissRequest = { showInfoSheet = false },
+                   sheetState = infoSheetState,
+               ) {
+                   Column(Modifier.padding(all = 12.dp)) {
+                       Text("Lost in the Gardens", fontSize = 36.sp)
+                       Text("Version ${BuildConfig.VERSION_NAME} (Build ${BuildConfig.VERSION_CODE})", fontSize = 18.sp)
+                       Text(bylineText)
+                       Text(logoAttributionText)
+                   }
+               }
+            }
             if (showBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = { showBottomSheet = false },
-                    sheetState = sheetState,
+                    sheetState = bottomSheetState,
                 ) {
                     LazyColumn(
                         contentPadding = PaddingValues(horizontal = 16.dp),
